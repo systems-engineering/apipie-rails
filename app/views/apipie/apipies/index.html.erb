@@ -4,7 +4,7 @@
 
     <% @doc[:resources].sort_by(&:first).each do |key, api| %>
       <li class="title">
-        <a href="#">
+        <a>
           <%= api[:name] %>
         </a>
       </li>
@@ -99,6 +99,8 @@
 
   [].slice.call(document.querySelectorAll("nav .title")).forEach(function(t) {
     t.addEventListener("click", function(e) {
+      e.preventDefault();
+
       // Hide all submenues
       [].slice.call(document.querySelectorAll(".submenu")).forEach(function(submenu) {
         submenu.classList.remove("open");
