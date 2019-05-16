@@ -1,7 +1,94 @@
 body {
-  padding-top: 20px;
-  padding-bottom: 40px;
+  font-family: Arial, sans-serif;
+  font-size: 100%;
+  color: #333;
+  padding: 0;
+  margin: 0;
+  display: flex;
 }
-.sidebar-nav {
-  padding: 9px 0;
+
+a {
+  text-decoration: none;
+  color: #2D3BCB;
+}
+
+nav {
+  position: fixed;
+  width: 16rem;
+  padding: 2rem;
+  overflow-y: auto;
+  height: calc(100% - 4rem);
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+article {
+  width: calc(100% - 20rem);
+  margin-left: 20rem;
+}
+
+li {
+  margin-top: 0.2rem;
+}
+
+.tag {
+  font-size: 0.8rem;
+  background-color: #555;
+  color: #fff;
+  padding: 0.3rem 0.5rem;
+  border-radius: 3px;
+}
+
+td {
+  vertical-align: top;
+}
+
+td p:first-child {
+  margin-top: 0;
+}
+
+td p:last-child {
+  margin-bottom: 0;
+}
+
+ul.submenu {
+  visibility: hidden;
+  height: 0;
+}
+
+ul.submenu.open {
+  visibility: visible;
+  height: initial;
+  margin-bottom: 1rem;
+}
+
+.method {
+  display: flex;
+  flex-direction: row-reverse;
+  margin-top: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: solid 1px #333;
+}
+
+.method h2 {
+  margin-top: 0;
+}
+
+.method aside {
+  width: 50%;
+}
+
+.method section {
+  width: 50%;
+}
+
+pre {
+  margin: 0;
+  overflow: auto;
+  margin-right: 2rem;
+  font-size: 1rem;
 }

@@ -1,56 +1,111 @@
-<ul class='breadcrumb'>
-  <li class='active'><a href='<%= @doc[:doc_url] %><%= @doc[:link_extension] %>'><%= @doc[:name] %> <%= @doc[:resources].values.first && @doc[:resources].values.first[:version] %></a></li>
-  <%= render(:partial => "languages", :locals => {:doc_url => @doc[:doc_url]}) %>
-  <% if @versions && @versions.size > 1 %>
-  <li class='pull-right'>
-    <%= @versions.collect { |v| link_to v, Apipie.full_url(v+@doc[:link_extension]) }.join(' / ').html_safe %>
-  </li>
-  <% end %>
-</ul>
+<nav>
+  <ul>
+    <% idx = 0 %>
 
-<div><%= raw @doc[:info] %></div>
+    <% @doc[:resources].sort_by(&:first).each do |key, api| %>
+      <li class="title">
+        <a href="#">
+          <%= api[:name] %>
+        </a>
+      </li>
 
-<h1 class='page-header'><%= t('apipie.resources') %></h1>
-
-<% @doc[:resources].sort_by(&:first).each do |key, api| %>
-  <h2>
-    <a href='<%= api[:doc_url] %><%= @doc[:link_extension] %>'>
-      <%= api[:name] %>
-    </a>
-    <% if api[:deprecated] %>
-        <code>DEPRECATED</code>
+      <ul class="submenu">
+        <% api[:methods].each do |m| %>
+          <%- m[:id] = "#{key}-#{idx += 1}" %>
+          <li>
+            <a href="#<%= m[:id] %>">
+              <%= m[:apis].first[:short_description] %>
+            </a>
+          </li>
+        <% end %>
+      </ul>
     <% end %>
-    <br>
-    <small><%= api[:short_description] %></small>
-  </h2>
-  <table class='table'>
-    <thead>
-      <tr>
-        <th><%= t('apipie.resource') %></th>
-        <th><%= t('apipie.description') %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% api[:methods].each do |m| %>
-        <% if !m[:show] %>
-          <% next %>
-        <% end %>
-        <% m[:apis].each do |a| %>
-          <tr>
-            <td>
-              <a href='<%= m[:doc_url] %><%= @doc[:link_extension] %>'><%= a[:http_method] %> <%= a[:api_url] %></a>
-              <% if a[:deprecated] %>
-                <code>DEPRECATED</code>
-              <% end %>
-            </td>
-            <td width='60%'><%= a[:short_description] %></td>
-          </tr>
-        <% end %>
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
+  </ul>
+</nav>
 
-<% unless content_for(:apipie_footer) == @doc[:copyright] %>
-  <%= content_for :apipie_footer, raw(@doc[:copyright]) %>
-<% end %>
+<article>
+  <%= raw @doc[:info] %>
+
+  <% @doc[:resources].sort_by(&:first).each do |key, api| %>
+    <% api[:methods].each do |m| %>
+      <%= render(:partial => "method_detail", :locals => {:method => m, :h_level => 3}) %>
+    <% end %>
+  <% end %>
+</article>
+
+<script type="text/javascript">
+  window.addEventListener("hashchange", function() {
+    // Remove all current classes
+    links = document.querySelectorAll("nav a");
+    [].slice.call(links).forEach(function(link) {
+      link.classList.remove("current");
+    });
+
+    // Collapse all submenues
+    submenues = document.querySelectorAll(".submenu");
+    [].slice.call(submenues).forEach(function(submenu) {
+      submenu.classList.remove("open");
+    });
+
+    // Add current for the active menu
+    id = window.location.hash;
+    activeLink = document.querySelector("nav a[href='" + id + "']");
+    if (activeLink) {
+      activeLink.classList.add("current");
+
+      // Expand the submenu with the active link
+      submenu = activeLink.parentNode.parentNode;
+      submenu.classList.add("open");
+    }
+  });
+
+  var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+      bounding.top >= 0 &&
+      bounding.left >= 0 &&
+      bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  };
+
+  window.addEventListener("scroll", function(event) {
+    atBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight;
+
+    // Get the first, visible method headline
+    vh2s = [];
+    [].slice.call(document.querySelectorAll(".method h2")).forEach(function(h2) {
+      if (isInViewport(h2)) vh2s.push(h2);
+    });
+
+    h2 = vh2s[0];
+    if (atBottom) h2 = vh2s.reverse()[0];
+
+    if (h2) {
+      // Hide all submenues
+      [].slice.call(document.querySelectorAll(".submenu")).forEach(function(submenu) {
+        submenu.classList.remove("open");
+      });
+
+      // Find matching nav link
+      hash = h2.querySelector("a").getAttribute("href");
+      link = document.querySelector("nav a[href='" + hash + "']");
+
+      // Find the submenu and display it
+      submenu = link.parentNode.parentNode;
+      submenu.classList.add("open");
+    };
+  });
+
+  [].slice.call(document.querySelectorAll("nav .title")).forEach(function(t) {
+    t.addEventListener("click", function(e) {
+      // Hide all submenues
+      [].slice.call(document.querySelectorAll(".submenu")).forEach(function(submenu) {
+        submenu.classList.remove("open");
+      });
+
+      submenu = t.nextSibling.nextSibling;
+      submenu.classList.add("open");
+    })
+  })
+</script>
