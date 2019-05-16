@@ -24,11 +24,23 @@ nav {
 }
 
 nav a {
-  color: #fff;
+  color: #ADAEB1;
 }
 
 nav .title.active {
   font-weight: bold;
+  border-bottom: solid 1px #fff;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  margin-top: 1rem;
+}
+
+nav .title.active:first-child {
+  margin-top: 0;
+}
+
+nav .title.active a {
+  color: #fff;
 }
 
 nav ul {
@@ -79,6 +91,7 @@ ul.submenu.open {
 
 ul.submenu.open a {
   font-weight: bold;
+  color: #fff;
 }
 
 .method {

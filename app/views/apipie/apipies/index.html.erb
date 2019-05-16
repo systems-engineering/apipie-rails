@@ -34,30 +34,21 @@
 </article>
 
 <script type="text/javascript">
-  window.addEventListener("hashchange", function() {
-    // Remove all current classes
-    links = document.querySelectorAll("nav a");
-    [].slice.call(links).forEach(function(link) {
-      link.classList.remove("current");
-    });
-
-    // Collapse all submenues
+  var resetMenu = function () {
     submenues = document.querySelectorAll(".submenu");
     [].slice.call(submenues).forEach(function(submenu) {
       submenu.classList.remove("open");
     });
 
-    // Add current for the active menu
-    id = window.location.hash;
-    activeLink = document.querySelector("nav a[href='" + id + "']");
-    if (activeLink) {
-      activeLink.classList.add("current");
+    links = document.querySelectorAll("nav a");
+    [].slice.call(links).forEach(function(link) {
+      link.classList.remove("current");
+    });
 
-      // Expand the submenu with the active link
-      submenu = activeLink.parentNode.parentNode;
-      submenu.classList.add("open");
-    }
-  });
+    [].slice.call(document.querySelectorAll("nav .title")).forEach(function(t) {
+      t.classList.remove("active");
+    });
+  }
 
   var isInViewport = function (elem) {
     var bounding = elem.getBoundingClientRect();
@@ -69,7 +60,12 @@
     );
   };
 
-  window.addEventListener("scroll", function(event) {
+  var openSubmenu = function(elem) {
+    elem.classList.add("open");
+    elem.previousSibling.previousSibling.classList.add("active");
+  }
+
+  var observeScroll = function() {
     atBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight;
 
     // Get the first, visible method headline
@@ -82,46 +78,38 @@
     if (atBottom) h2 = vh2s.reverse()[0];
 
     if (h2) {
-      // Hide all submenues
-      [].slice.call(document.querySelectorAll(".submenu")).forEach(function(submenu) {
-        submenu.classList.remove("open");
-      });
+      resetMenu();
 
       // Find matching nav link
       hash = h2.querySelector("a").getAttribute("href");
       link = document.querySelector("nav a[href='" + hash + "']");
-
-      // Find the submenu and display it
-      submenu = link.parentNode.parentNode;
-      submenu.classList.add("open");
-
-      // Deactivate all titles
-      [].slice.call(document.querySelectorAll("nav .title")).forEach(function(t) {
-        t.classList.remove("active");
-      });
-
-      // Find the related title, and activate it
-      submenu.previousSibling.previousSibling.classList.add("active");
+      openSubmenu(link.parentNode.parentNode);
     };
+  }
+
+  window.addEventListener("hashchange", function() {
+    resetMenu()
+
+    // Add current for the active menu
+    id = window.location.hash;
+    activeLink = document.querySelector("nav a[href='" + id + "']");
+    if (activeLink) {
+      submenu = activeLink.parentNode.parentNode;
+      openSubmenu(submenu);
+    }
+  });
+
+  window.addEventListener("scroll", function() {
+    observeScroll();
   });
 
   [].slice.call(document.querySelectorAll("nav .title")).forEach(function(t) {
     t.addEventListener("click", function(e) {
       e.preventDefault();
-
-      // Deactivate all titles
-      [].slice.call(document.querySelectorAll("nav .title")).forEach(function(t) {
-        t.classList.remove("active");
-      });
-
-      // Hide all submenues
-      [].slice.call(document.querySelectorAll(".submenu")).forEach(function(submenu) {
-        submenu.classList.remove("open");
-      });
+      resetMenu()
 
       submenu = t.nextSibling.nextSibling;
-      submenu.classList.add("open");
-      t.classList.add("active")
+      openSubmenu(submenu);
 
       // Goto the first link in the newly opened submenu
       firstLink = submenu.querySelector("a:first-child");
@@ -133,4 +121,6 @@
       firstLink.dispatchEvent(event);
     })
   })
+
+  observeScroll();
 </script>
