@@ -10,14 +10,25 @@ body {
 a {
   text-decoration: none;
   color: #2D3BCB;
+  cursor: pointer;
 }
 
 nav {
   position: fixed;
   width: 16rem;
-  padding: 2rem;
+  padding: 2rem 1rem 2rem 2rem;
   overflow-y: auto;
-  height: calc(100% - 4rem);
+  height: calc(100% - 3rem);
+  background-color: #333;
+  color: #fff;
+}
+
+nav a {
+  color: #fff;
+}
+
+nav .title.active {
+  font-weight: bold;
 }
 
 nav ul {
@@ -64,6 +75,10 @@ ul.submenu.open {
   visibility: visible;
   height: initial;
   margin-bottom: 1rem;
+}
+
+ul.submenu.open a {
+  font-weight: bold;
 }
 
 .method {

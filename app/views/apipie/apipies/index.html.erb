@@ -94,12 +94,25 @@
       // Find the submenu and display it
       submenu = link.parentNode.parentNode;
       submenu.classList.add("open");
+
+      // Deactivate all titles
+      [].slice.call(document.querySelectorAll("nav .title")).forEach(function(t) {
+        t.classList.remove("active");
+      });
+
+      // Find the related title, and activate it
+      submenu.previousSibling.previousSibling.classList.add("active");
     };
   });
 
   [].slice.call(document.querySelectorAll("nav .title")).forEach(function(t) {
     t.addEventListener("click", function(e) {
       e.preventDefault();
+
+      // Deactivate all titles
+      [].slice.call(document.querySelectorAll("nav .title")).forEach(function(t) {
+        t.classList.remove("active");
+      });
 
       // Hide all submenues
       [].slice.call(document.querySelectorAll(".submenu")).forEach(function(submenu) {
@@ -108,6 +121,16 @@
 
       submenu = t.nextSibling.nextSibling;
       submenu.classList.add("open");
+      t.classList.add("active")
+
+      // Goto the first link in the newly opened submenu
+      firstLink = submenu.querySelector("a:first-child");
+      event = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      firstLink.dispatchEvent(event);
     })
   })
 </script>
