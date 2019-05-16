@@ -54,9 +54,9 @@ module Apipie
 
       def parse_data(data)
         return nil if data.strip.blank?
-        JSON.parse(data)
+        JSON.parse data
       rescue StandardError
-        data
+        Rack::Utils.parse_nested_query data
       end
 
       def reformat_multipart_data(form)
