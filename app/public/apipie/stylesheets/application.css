@@ -13,6 +13,10 @@ a {
   cursor: pointer;
 }
 
+a:hover, a:focus {
+  outline: none;
+}
+
 nav {
   position: fixed;
   width: 16rem;
@@ -98,12 +102,21 @@ ul.submenu.open a {
   display: flex;
   flex-direction: row-reverse;
   margin-top: 2rem;
-  padding-bottom: 2rem;
+  padding-bottom: 100px;
   border-bottom: solid 1px #333;
 }
 
 .method h2 {
   margin-top: 0;
+}
+
+.method h2 a::before {
+  margin-top: -100px;
+  padding-bottom: 100px;
+  display: block;
+  content: "";
+  pointer-events: none;
+  cursor: default;
 }
 
 .method aside {
