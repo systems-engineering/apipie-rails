@@ -1,47 +1,45 @@
-<%= cache method do %>
-  <section class="method">
-    <aside>
-      <% unless method[:examples].blank? %>
-        <% method[:examples].each do |example| %>
-          <pre class="prettyprint"><code class="http"><%= example %></code></pre>
-        <% end %>
+<section class="method">
+  <aside>
+    <% unless method[:examples].blank? %>
+      <% method[:examples].each do |example| %>
+        <pre class="prettyprint"><code class="http"><%= example %></code></pre>
       <% end %>
-    </aside>
+    <% end %>
+  </aside>
 
-    <section>
-      <h2>
-        <a
-          name="<%= method[:id] %>"
-          id="<%= method[:id] %>"
-          href="#<%= method[:id] %>">
-          <%= method[:apis].first[:short_description] %>
-        </a>
+  <section>
+    <h2>
+      <a
+        name="<%= method[:id] %>"
+        id="<%= method[:id] %>"
+        href="#<%= method[:id] %>">
+        <%= method[:apis].first[:short_description] %>
+      </a>
 
-        <% Array(method[:formats]).each do |f| %>
-          <span class="tag <%= f %>">
-            <%= f %>
-          </span>
-        <% end -%>
-      </h2>
+      <% Array(method[:formats]).each do |f| %>
+        <span class="tag <%= f %>">
+          <%= f %>
+        </span>
+      <% end -%>
+    </h2>
 
-      <%= raw method[:full_description] %>
+    <%= raw method[:full_description] %>
 
-      <% unless method[:metadata].blank? %>
-        <%= heading(t('apipie.metadata'), h_level) %>
-        <%= render(:partial => "metadata", :locals => {:meta => method[:metadata]}) %>
-      <% end %>
+    <% unless method[:metadata].blank? %>
+      <%= heading(t('apipie.metadata'), h_level) %>
+      <%= render(:partial => "metadata", :locals => {:meta => method[:metadata]}) %>
+    <% end %>
 
-      <%= render(:partial => "headers", :locals => {:headers => method[:headers], :h_level => h_level }) %>
+    <%= render(:partial => "headers", :locals => {:headers => method[:headers], :h_level => h_level }) %>
 
-      <% unless method[:params].blank? %>
-        <table>
-          <%= render(:partial => "params", :locals => {:params => method[:params]}) %>
-        </table>
-      <% end %>
+    <% unless method[:params].blank? %>
+      <table>
+        <%= render(:partial => "params", :locals => {:params => method[:params]}) %>
+      </table>
+    <% end %>
 
-      <% unless method[:errors].blank? %>
-        <%= render(:partial => "errors", :locals => {:errors => method[:errors]}) %>
-      <% end %>
-    </section>
+    <% unless method[:errors].blank? %>
+      <%= render(:partial => "errors", :locals => {:errors => method[:errors]}) %>
+    <% end %>
   </section>
-<% end -%>
+</section>
